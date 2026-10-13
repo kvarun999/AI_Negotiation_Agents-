@@ -1,0 +1,38 @@
+{
+  "usa": {
+    "priorities": [
+      "Reduce tariffs on technology products",
+      "Strengthen intellectual property (IP) protection clauses",
+      "Enforce fair trade practices and anti-dumping measures",
+      "Expand market access for American financial services"
+    ],
+    "flexibility": {
+      "tariffs": 0.7,
+      "ip_protection": 0.3,
+      "anti_dumping": 0.5,
+      "financial_services": 0.6
+    },
+    "red_lines": [
+      "No concessions on core IP enforcement mechanisms",
+      "Tariff reductions must be reciprocal"
+    ]
+  },
+  "china": {
+    "priorities": [
+      "Gain greater market access for agricultural products",
+      "Limit restrictions on technology transfer",
+      "Reduce American tariffs on manufactured goods",
+      "Protect state-owned enterprise subsidies"
+    ],
+    "flexibility": {
+      "market_access": 0.8,
+      "tech_transfer_limits": 0.4,
+      "manufactured_tariffs": 0.6,
+      "soe_subsidies": 0.2
+    },
+    "red_lines": [
+      "Technology transfer policies remain sovereign",
+      "State subsidies are non-negotiable"
+    ]
+  }
+}
