@@ -1,0 +1,58 @@
+# ── Python ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+
+# ── Virtual environments ─────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+.Python
+
+# ── Environment / secrets ────────────────────────────────────
+.env
+# .env.example is intentionally committed (contains no secrets)
+
+# ── Test & coverage artefacts ────────────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+nosetests.xml
+test-results/
+
+# ── Type checkers / linters ──────────────────────────────────
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+
+# ── IDEs ─────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ── OS artefacts ─────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Runtime-generated files ──────────────────────────────────
+negotiation_log.json
+negotiation_log_test.json
+
+# ── Docker local volumes ─────────────────────────────────────
+ollama_data/
+
+# ── Distribution / packaging ─────────────────────────────────
+dist/
+build/
+*.egg-info/
