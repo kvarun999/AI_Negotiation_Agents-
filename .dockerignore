@@ -1,0 +1,33 @@
+# ── Python cache / bytecode ──────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# ── Virtual environments ─────────────────────────────────────
+.venv/
+venv/
+env/
+.env
+
+# ── Test / coverage artefacts ────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# ── IDE / editor ─────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ── OS artefacts ─────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Runtime files that should NOT be included in the image ───
+negotiation_log.json
+
+# ── Docker volumes / local model cache ───────────────────────
+ollama_data/
