@@ -1,0 +1,90 @@
+# ============================================================
+# AI Trade Negotiation — docker-compose.yml
+# ============================================================
+# Orchestrates two services:
+#   1. ollama  — runs the Llama 3 LLM locally
+#   2. api     — the FastAPI negotiation orchestrator
+#
+# Usage:
+#   docker-compose up --build           # first run
+#   docker-compose up -d                # subsequent runs (detached)
+#   docker-compose exec api pytest      # run tests inside container
+#   docker-compose down                 # stop and remove containers
+#
+# Pull the model before first use:
+#   docker-compose exec ollama ollama pull llama3
+# ============================================================
+
+version: "3.9"
+
+services:
+
+  # ── Ollama LLM service ──────────────────────────────────
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"          # Expose for optional local debugging
+    volumes:
+      - ollama_data:/root/.ollama   # Persist downloaded models between restarts
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s         # Give Ollama time to initialise on first start
+    networks:
+      - negotiation_net
+
+  # ── FastAPI negotiation API ─────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: negotiation_api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"             # Host → container API port
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      # All configuration is sourced from environment variables.
+      # Override any value by creating a .env file in the project root
+      # (copy from .env.example).
+      OLLAMA_BASE_URL: "${OLLAMA_BASE_URL:-http://ollama:11434}"
+      OLLAMA_MODEL: "${OLLAMA_MODEL:-llama3}"
+      LLM_TEMPERATURE: "${LLM_TEMPERATURE:-0.3}"
+      OLLAMA_TIMEOUT: "${OLLAMA_TIMEOUT:-120}"
+      AGREEMENT_THRESHOLD: "${AGREEMENT_THRESHOLD:-0.5}"
+      LOG_FILE_PATH: "${LOG_FILE_PATH:-/app/logs/negotiation_log.json}"
+      TRADE_POSITIONS_PATH: "${TRADE_POSITIONS_PATH:-data/trade_positions.json}"
+    volumes:
+      # Mount the data directory read-only so trade positions can be
+      # updated on the host without rebuilding the image.
+      - ./data:/app/data:ro
+      # Mount a dedicated writable directory for the negotiation log so
+      # data persists across container restarts without shadowing /app.
+      - negotiation_logs:/app/logs
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import httpx; httpx.get('http://localhost:8000/health').raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - negotiation_net
+
+# ── Named volumes ────────────────────────────────────────────
+volumes:
+  ollama_data:
+    driver: local
+  negotiation_logs:
+    driver: local
+
+# ── Internal network ─────────────────────────────────────────
+networks:
+  negotiation_net:
+    driver: bridge
